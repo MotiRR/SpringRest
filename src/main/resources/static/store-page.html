@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html ng-app="app" ng-controller="booksController">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Book store</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <script src="app.component.ts"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+    <script>function sendForm(){
+    let form = document.getElementsByTagName('form');
+    form.submit();
+}
+    </script>
+
+</head>
+<body>
+<div class="container">
+
+    <h1>Магазин книг</h1>
+    <h4>Фильтр:</h4>
+
+    <form novalidate ng-submit="submitFilter()">
+        <div class="form-group">
+            <label>Минимальная стоимость</label>
+            <input type="number" ng-model="filterBook.minPrice" class="form-control form-control-sm" name="minPrice">
+
+            <label>Максимальная стоимость</label>
+            <input type="number" ng-model="filterBook.maxPrice" class="form-control form-control-sm" name="maxPrice">
+
+            <label>Поиск книги по шаблону названия</label>
+            <input type="text" ng-model="filterBook.titlePart" class="form-control form-control-sm" name="titlePart">
+
+            <label>Жанры</label>
+            <ul>
+                <!--<li ng-repeat="genre in allGenres">
+                     <input type="checkbox" ng-checked="checked" ng-value="genre" name="genre" ng-model="genre">
+                     <label>{{genre}}</label>
+                 </li>
+               -->
+                  <li>
+                      <input type="checkbox" ng-model="filterBook.gen['Фэнтези']">
+                      <label>Фэнтези</label>
+                  </li>
+                  <li>
+                      <input type="checkbox" ng-model="filterBook.gen['Фантастика']">
+                      <label>Фантастика</label>
+                  </li>
+                  <li>
+                      <input type="checkbox" ng-model="filterBook.gen['Детектив']">
+                      <label>Детектив</label>
+                  </li>
+
+                <!--   -->
+            </ul>
+            <div>
+                <button class="btn btn-primary" type="submit">Применить</button>
+            </div>
+        </div>
+    </form>
+    <br>
+    <br>
+    <h4>Список книг:</h4>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>Название</td>
+            <td>Описание</td>
+            <td>Цена</td>
+            <td>Год издания</td>
+            <td>Жанр</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="b in BooksList">
+            <td>{{b.title}}</td>
+            <td>{{b.description}}</td>
+            <td>{{b.price}}</td>
+            <td>{{b.publishYear}}</td>
+            <td>{{b.genreValue}}</td>
+            <!--<td>
+                <a class="btn btn-secondary" th:href="@{'/cart/add/?book_id=' + ${b.id}}">В корзину</a>
+            </td>-->
+        </tr>
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination" ng-repeat="p in arrayPage" style="float:left">
+            <li class="page-item"><a class="page-link"
+                                     ng-if="p==1 && page!=1" ng-click="query(page-1, filterParams)">prev</a>
+                <a class="page-link" ng-if="p==1 && page==1">prev</a>
+            </li>
+
+            <li class="page-item"><a class="page-link" ng-click="query(p, filterParams)"
+                                     >{{p}}</a>
+
+            </li>
+            <li class="page-item"><a class="page-link"
+                                     ng-if="p==5 && page!=pageCount" ng-click="query(page+1, filterParams)">next</a>
+                <a class="page-link" ng-if="p==5 && page==pageCount">next</a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Book store</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script>function sendForm(){
+    let form = document.getElementsByTagName('form');
+    form.submit();
+}
+    </script>
+    <style>
+        a.dis {
+    pointer-events: none; /* делаем ссылку некликабельной */
+    cursor: default;  /* устанавливаем курсор в виде стрелки */
+    color: #999; /* цвет текста для нективной ссылки */
+    }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments :: navigation(BookStore)}"/>
+    <h1>Магазин книг</h1>
+    <h4>Фильтр:</h4>
+    <form th:action="@{'/books'}" method="get" target="_self">
+        <div class="form-group">
+            <label>Минимальная стоимость</label>
+            <input th:value="${param.minPrice != null ? param.minPrice : null}" type="number" class="form-control form-control-sm" name="minPrice">
+
+            <label>Максимальная стоимость</label>
+            <input th:value="${param.maxPrice != null ? param.maxPrice : null}" type="number" class="form-control form-control-sm" name="maxPrice">
+
+            <label>Поиск книги по шаблону названия</label>
+            <input th:value="${param.titlePart != null ? param.titlePart : null}" type="text" class="form-control form-control-sm" name="titlePart">
+
+            <label>Жанры</label>
+            <ul>
+                <li th:each="genre, state : ${allGenres}">
+                    <input type="checkbox" th:value="${genre.getGenre()}" th:name="gen" th:checked="${(param.gen!= null && param.gen[0] != null && #lists.contains(param.gen, #strings.toString(genre.getGenre()))) ? true : false}">
+                    <label th:text="${genre.genre}"></label>
+                </li>
+            </ul>
+        </div>
+        <button class="btn btn-primary" onclick="sendForm();">Применить</button>
+        <!--type="submit"-->
+    </form>
+    <br>
+    <br>
+    <h4>Список книг:</h4>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>Название</td>
+            <td>Описание</td>
+            <td>Цена</td>
+            <td>Год издания</td>
+            <td>Жанр</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="b : ${books}">
+            <td th:text="${b.title}"></td>
+            <td th:text="${b.description}"></td>
+            <td th:text="${b.price}"></td>
+            <td th:text="${b.publishYear}"></td>
+            <td th:text="${b.genreValue}"></td>
+            <td>
+                <a class="btn btn-secondary" th:href="@{'/cart/add/?book_id=' + ${b.id}}">В корзину</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:replace="~{fragments :: page_navigation(${page}, ${pageCount}, ${filterParams})}"/>
+</div>
+</body>
+</html>
